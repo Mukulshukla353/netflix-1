@@ -12,7 +12,7 @@ f: followed by name of the file that u want to unzip
 
 $ls
 $cd Grafana-11.1.4
-$./bin/Grafana-server
+$./bin/grafana-server
 Grafana works on port 3000……so in security group if port 3000 is enabled or not
 Access grafana in web browser: <public_ip>:3000
 Default username and password: admin
@@ -22,8 +22,8 @@ $sudo su
 $apt-get update -y
 $apt install docker.io -y
 $service docker start
-$docker run -it –name c01 ubuntu
-$docker run -it –name c02 ubuntu
+$docker run -it --name c01 ubuntu
+$docker run -it --name c02 ubuntu
 
 PROMETHEUS INSTALLATION
 
@@ -35,6 +35,7 @@ $vi /etc/docker/daemon.json
 daemon.json: configuration file
 Docker -> publishes it metrics on port 9232
 Experimental: true
+
 Allowing the use of experimental features
 
 Metrics-addr: specify port where docker metrics endpoints would be exposed
