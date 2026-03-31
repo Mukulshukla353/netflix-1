@@ -11,7 +11,7 @@ v: verbose
 f: followed by name of the file that u want to unzip
 
 $ls
-$cd grafana-11.1.4
+$cd grafana-v11.1.4
 $./bin/grafana-server
 Grafana works on port 3000……so in security group if port 3000 is enabled or not
 Access grafana in web browser: <public_ip>:3000
@@ -24,11 +24,6 @@ $apt install docker.io -y
 $service docker start
 $docker run -it --name c01 ubuntu
 $docker run -it --name c02 ubuntu
-
-PROMETHEUS INSTALLATION
-
-$wget https://github.com/prometheus/prometheus/releases/download/v2.53.2/prometheus-2.53.2.linux-amd64.tar.gz
-$tar -zxvf prometheus-2.53.2.linux-amd64.tar.gz
 We need to tell docker and Prometheus which httpd endpoint Prometheus would be reading/scraping
 Docker needs to expose httpd endpoint
 $vi /etc/docker/daemon.json
@@ -45,7 +40,12 @@ Allowing the use of experimental features
 Metrics-addr: specify port where docker metrics endpoints would be exposed
 $service docker restart
 35.171.163.101:9323/metrics
-Published metrics…
+
+PROMETHEUS INSTALLATION
+
+$wget https://github.com/prometheus/prometheus/releases/download/v2.53.2/prometheus-2.53.2.linux-amd64.tar.gz
+$tar -zxvf prometheus-2.53.2.linux-amd64.tar.gz
+
 Tell Prometheus which endpoint to read
 Prometheus.yaml -> it all the configuration of Prometheus
 In this file we need to specify which httpd endpoint the Prometheus needs to scrape
