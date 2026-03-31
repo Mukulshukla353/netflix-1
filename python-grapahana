@@ -1,0 +1,77 @@
+Step 1: Create a Sample Metrics Application (Python)
+
+Launch EC2 (for app)
+Connect to EC2
+Install Python
+$sudo apt update
+$sudo apt install python3-pip -y
+Install Prometheus Client
+$pip3 install prometheus_client
+Prometheus_client =python library that lets your app generate and expose metrics at /metrics
+start_http_server, Counter, Gauge-> metrics
+Create the App File
+$nano app.py
+Create a file named app.py with the following code:
+
+from prometheus_client import start_http_server, Counter, Gauge
+import random
+import time
+
+REQUESTS = Counter('http_requests_total', 'Total HTTP Requests') #http_requests_total: prometheus sees…Total HTTP Requests: description for human #eyes
+
+TEMPERATURE = Gauge('room_temperature', 'Simulated Room Temperature')
+
+if __name__ == '__main__':
+    start_http_server(8000) #start a small web server on port 8000
+    while True:
+        REQUESTS.inc() #one more request happened
+        TEMPERATURE.set(random.uniform(20, 30))
+        time.sleep(2)
+
+
+CTRL + X → Y → Enter
+6. Run the application:
+$python3 app.py
+
+7. Verify Open browser: 
+http://<public ip address>:8000/metrics
+Step 2: Configure Prometheus Target
+Open prometheus.yml and add:
+
+scrape_configs:
+  - job_name: 'python-app'
+    static_configs:
+      - targets: [<ip address>:8000']
+
+Restart Prometheus after saving.
+$sudo systemctl restart prometheus
+Verify in browser:
+http://<ip address>:9090
+
+Search for metric: http_requests_total
+Step 3: Query Metrics in Prometheus
+Example queries:
+- http_requests_total
+- rate(http_requests_total[1m])
+- room_temperature
+
+
+Step 4: Configure Grafana
+1. Open Grafana: http://localhost:3000
+2. Go to Settings → Data Sources
+3. Add Prometheus
+4. URL: http://localhost:9090
+5. Click Save & Test
+Step 5: Create Dashboard
+1. Click '+' → Dashboard → Add Panel
+2. Use query: rate(http_requests_total[1m])
+3. Add another panel with: room_temperature
+4. Choose visualization (Graph)
+5. Save dashboard
+Step 6: Expected Outcome
+- Live request rate graph
+- Simulated temperature fluctuations
+- Real-time monitoring working end-to-end
+Step 7: Cleanup
+Stop the Python app:
+CTRL + C
